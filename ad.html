@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ad - Please Wait</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    let seconds = 30;
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get("redirect");
+
+    const [adLink, telegramLink] = redirectParam.split("@");
+
+    function startCountdown() {
+      const countdown = document.getElementById("countdown");
+
+      // Open Adsterra in a new tab
+      window.open(adLink, "_blank");
+
+      const interval = setInterval(() => {
+        seconds--;
+        countdown.textContent = seconds;
+
+        if (seconds <= 0) {
+          clearInterval(interval);
+          window.location.href = telegramLink;
+        }
+      }, 1000);
+    }
+
+    window.onload = startCountdown;
+  </script>
+</head>
+<body>
+  <div class="ad-box">
+    <h2>Sponsored Ad</h2>
+    <p>Ad opened in a new tab. Please keep it open for 30 seconds.</p>
+    <p>Redirecting in <span id="countdown">30</span> seconds...</p>
+  </div>
+</body>
+</html>

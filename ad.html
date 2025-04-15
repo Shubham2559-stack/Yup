@@ -10,11 +10,15 @@
     const urlParams = new URLSearchParams(window.location.search);
     const redirectParam = urlParams.get("redirect");
 
-    const [adLink, finalLink] = redirectParam.split("@");
+    // Split into Adsterra link and Telegram bot link
+    const [adLink, telegramLink] = redirectParam.split("@");
+    let adWindow;
 
     function startCountdown() {
       const countdown = document.getElementById("countdown");
-      const button = document.getElementById("continueBtn");
+
+      // Open Adsterra in a new tab immediately
+      adWindow = window.open(adLink, "_blank");
 
       const interval = setInterval(() => {
         seconds--;
@@ -22,19 +26,16 @@
 
         if (seconds <= 0) {
           clearInterval(interval);
-          button.disabled = false;
-          button.textContent = "Continue to Access";
+
+          // Try to close the Adsterra tab
+          if (adWindow && !adWindow.closed) {
+            adWindow.close();
+          }
+
+          // Redirect to Telegram bot
+          window.location.href = telegramLink;
         }
       }, 1000);
-    }
-
-    function redirectToAdsterra() {
-      window.location.href = adLink;
-
-      // OPTIONAL: Auto-redirect to Telegram after 5 seconds
-      setTimeout(() => {
-        window.location.href = finalLink;
-      }, 5000);
     }
 
     window.onload = startCountdown;
@@ -43,8 +44,8 @@
 <body>
   <div class="ad-box">
     <h2>Sponsored Ad</h2>
-    <p>Please wait <span id="countdown">30</span> seconds to continue...</p>
-    <button id="continueBtn" onclick="redirectToAdsterra()" disabled>Wait...</button>
+    <p>Ad is open in a new tab. Please wait <span id="countdown">30</span> seconds...</p>
+    <p>You will be redirected automatically.</p>
   </div>
 </body>
 </html>
